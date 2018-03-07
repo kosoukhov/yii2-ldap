@@ -1,0 +1,27 @@
+{
+    "name": "kosoukhov/ldap",
+    "description": "Authorize, search users, get user groups and other from LDAP",
+    "version": "1.0.0",
+    "type": "yii2-extension",
+    "keywords": ["yii2","extension","ldap"],
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/kosoukhov/ldap/issues",
+        "source": "https://github.com/kosoukhov/ldap"
+    },
+    "authors": [
+        {
+            "name": "Vadim Kosoukhov",
+            "email": "kosoukhov@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "2.0.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "kosoukhov\\ldap\\": ""
+        }
+    }
+
+}
