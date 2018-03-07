@@ -37,14 +37,6 @@ return [
         'ldap' => [
             'class' => 'kosoukhov\ldap\Connector',
             'useCache' => YII_ENV_DEV ? false : true,
-            'host' => 'ldap.example.com',
-            'port' => '389',
-            'baseDN' => 'OU=...,DC=...,DC=...,DC=net',
-            'userDN' => '@....corp.net',
-            'groupDN' => '',
-            //Input your AD login/pass on dev or sys login/pass on test/prod servers
-            'sysUserLogin' => '',
-            'sysUserPassword' => '',
         ],
     ],
     // ...
