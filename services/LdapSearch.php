@@ -109,4 +109,17 @@ class LdapSearch extends BaseObject
     {
         return $this->normaizeAttributes($this->getAttributesByIdUserAttribute('mail', $email, $attributes), $attributes);
     }
+
+        /**
+     * Fetch user and its attribute.
+     *
+     * @param array $attributes
+     * @param int $offset
+     * @param int $n
+     * @return array|bool
+     */
+    public function fetchUsersAndAttributes($attributes, $offset, $n)
+    {
+        return null;
+    }
 }
