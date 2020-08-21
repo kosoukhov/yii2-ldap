@@ -118,8 +118,28 @@ class LdapSearch extends BaseObject
      * @param int $n
      * @return array|bool
      */
-    public function fetchUsersAndAttributes($attributes, $offset, $n)
+    public function fetchUsersAndAttributes($attributes, $pageSize, $cookie, $type = 'person')
     {
-        return null;
+        $data = [];
+
+        if (!is_array($attributes)) {
+            $singleAttribute = $attributes;
+            $attributes = [];
+            $attributes[] = $singleAttribute;
+        }
+
+        $filter = "objectClass=$type";
+
+        list($res, $cookie) = $this->ldap->fetch($this->baseDN, $filter, $attributes, $pageSize, $cookie);
+
+        if ($res) {
+
+            $data = ldap_get_entries($this->ldap->ldapConnection, $res);
+
+            return array(
+                $this->normaizeAttributes($data, $attributes),
+                $cookie
+            );
+        }
     }
 }
