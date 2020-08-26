@@ -193,7 +193,7 @@ class LdapWrapper extends BaseObject
             ldap_control_paged_result($this->ldapConnection, $pageSize, true, $cookie);
 
             $res = ldap_search($this->ldapConnection, $dn, $filter, $attributes);
-            $cookie = ldap_control_paged_result_response($this->ldapConnection, $res, $cookie);
+            ldap_control_paged_result_response($this->ldapConnection, $res, $cookie);
 
         } catch (\Exception $e) {
             if (ldap_get_option($this->ldapConnection, LDAP_OPT_DIAGNOSTIC_MESSAGE, $extended_error)) {
@@ -233,9 +233,9 @@ class LdapWrapper extends BaseObject
                 $error = $extended_error . ' with username ' . $LoginForm->username . ' and password ' . $LoginForm->password;
             } else {
                 $error = 'LDAP: Cannot authenticate with username ' . $LoginForm->username . ' and password ' . $LoginForm->password . '. Error: ' . $e->getMessage() . '. Ldap says: ' . ldap_err2str(ldap_errno($this->ldapConnection));
-            }
+            }	
 
-            if (!strpos($error, 'data 52e')) {
+            if (!empty($error)) {
                 //Returns when username is valid but password/credential is invalid.
                 //http://ldapwiki.com/wiki/Common%20Active%20Directory%20Bind%20Errors
                 throw new LdapException($error);
