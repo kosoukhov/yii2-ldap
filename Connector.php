@@ -221,6 +221,22 @@ class Connector extends Component
     }
 
     /**
+     * Fetch user and its attribute.
+     *
+     * @param array $attributes
+     * @param string $filter
+     * @param int $pageSize
+     * @param string $cookie
+     * @return array|bool
+     */
+    public function fetchUsersAndAttributes($attributes, $filter, $pageSize, $cookie)
+    {
+        $this->attributes = $attributes;
+
+        return $this->ldapSearch->fetchUsersAndAttributes($this->attributes, $filter, $pageSize, $cookie);
+    }
+
+    /**
      * @return array
      */
     public function getAttributes()

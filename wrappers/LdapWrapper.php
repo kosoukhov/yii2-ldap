@@ -166,6 +166,48 @@ class LdapWrapper extends BaseObject
         return $res;
     }
 
+       /**
+     * fetch user in AD
+     * @param string $dn
+     * @param string $filter
+     * @param array $attributes
+     * @param int $pageSize
+     * @param string $cookie
+     * @return array
+     * @throws LdapException
+     */
+    public function fetch($dn, $filter, $attributes, $pageSize, $cookie)
+    {
+        $extended_error = "";
+        $error = "";
+        $res = false;
+
+        try {
+            if (!$this->bind) {
+                $this->bind = new LoginForm([
+                    'username' => $this->sysUserLogin,
+                    'password' => $this->sysUserPassword,
+                ]);
+            }
+
+            ldap_control_paged_result($this->ldapConnection, $pageSize, true, $cookie);
+
+            $res = ldap_search($this->ldapConnection, $dn, $filter, $attributes);
+            ldap_control_paged_result_response($this->ldapConnection, $res, $cookie);
+
+        } catch (\Exception $e) {
+            if (ldap_get_option($this->ldapConnection, LDAP_OPT_DIAGNOSTIC_MESSAGE, $extended_error)) {
+                $error = "Error Search in LDAP: $extended_error";
+            } else {
+                $error = 'LDAP:  ldap_search error: ' . $e->getMessage() . '. Ldap says: ' . ldap_err2str(ldap_errno($this->ldapConnection));
+
+                throw new LdapException($error);
+            }
+        }
+
+        return array($res, $cookie);
+    }
+
     public function getBind()
     {
         return $this->_bind;
@@ -191,9 +233,9 @@ class LdapWrapper extends BaseObject
                 $error = $extended_error . ' with username ' . $LoginForm->username . ' and password ' . $LoginForm->password;
             } else {
                 $error = 'LDAP: Cannot authenticate with username ' . $LoginForm->username . ' and password ' . $LoginForm->password . '. Error: ' . $e->getMessage() . '. Ldap says: ' . ldap_err2str(ldap_errno($this->ldapConnection));
-            }
+            }	
 
-            if (!strpos($error, 'data 52e')) {
+            if (!empty($error)) {
                 //Returns when username is valid but password/credential is invalid.
                 //http://ldapwiki.com/wiki/Common%20Active%20Directory%20Bind%20Errors
                 throw new LdapException($error);
